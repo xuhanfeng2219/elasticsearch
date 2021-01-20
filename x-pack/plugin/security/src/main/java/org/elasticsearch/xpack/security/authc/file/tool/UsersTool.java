@@ -104,7 +104,7 @@ public class UsersTool extends LoggingAwareMultiCommand {
         protected void execute(Terminal terminal, OptionSet options, Environment env) throws Exception {
 
             String username = parseUsername(arguments.values(options), env.settings());
-            final boolean allowReserved = XPackSettings.RESERVED_REALM_ENABLED_SETTING.get(env.settings()) == false;
+            final boolean allowReserved = !XPackSettings.RESERVED_REALM_ENABLED_SETTING.get(env.settings());
             Validation.Error validationError = Users.validateUsername(username, allowReserved, env.settings());
             if (validationError != null) {
                 throw new UserException(ExitCodes.DATA_ERROR, "Invalid username [" + username + "]... " + validationError);

@@ -78,14 +78,7 @@ public class LicenseVerificationTool extends LoggingAwareCommand {
         if (!LicenseVerifier.verifyLicense(licenseSpec, Files.readAllBytes(publicKeyPath))) {
             throw new UserException(ExitCodes.DATA_ERROR, "Invalid License!");
         }
-        XContentBuilder builder = XContentFactory.contentBuilder(XContentType.JSON);
-        builder.startObject();
-        builder.startObject("license");
-        licenseSpec.toInnerXContent(builder, ToXContent.EMPTY_PARAMS);
-        builder.endObject();
-        builder.endObject();
-        builder.flush();
-        terminal.println(Strings.toString(builder));
+        LicenseGeneratorTool.getXContentBuilder(terminal, licenseSpec);
     }
 
     @SuppressForbidden(reason = "Parsing command line path")

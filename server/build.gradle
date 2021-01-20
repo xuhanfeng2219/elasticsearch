@@ -80,8 +80,9 @@ dependencies {
   compile project(':libs:elasticsearch-secure-sm')
   compile project(':libs:elasticsearch-x-content')
   compile project(":libs:elasticsearch-geo")
-
-  compileOnly project(':libs:elasticsearch-plugin-classloader')
+//修改以免报错
+//  compileOnly project(':libs:elasticsearch-plugin-classloader')
+  compile project(':libs:elasticsearch-plugin-classloader')
   testRuntime project(':libs:elasticsearch-plugin-classloader')
 
   // lucene

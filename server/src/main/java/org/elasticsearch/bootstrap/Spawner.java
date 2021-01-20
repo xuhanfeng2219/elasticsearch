@@ -71,6 +71,7 @@ final class Spawner implements Closeable {
          */
         List<Path> paths = PluginsService.findPluginDirs(environment.modulesFile());
         for (final Path modules : paths) {
+            //这里报错了
             final PluginInfo info = PluginInfo.readFromProperties(modules);
             final Path spawnPath = Platforms.nativeControllerPath(modules);
             if (!Files.isRegularFile(spawnPath)) {

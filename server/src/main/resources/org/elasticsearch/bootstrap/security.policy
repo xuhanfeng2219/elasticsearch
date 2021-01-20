@@ -40,6 +40,7 @@ grant codeBase "${codebase.lucene-core}" {
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
   // NOTE: also needed for RAMUsageEstimator size calculations
   permission java.lang.RuntimePermission "accessDeclaredMembers";
+  permission javax.management.MBeanTrustPermission "register";
 };
 
 grant codeBase "${codebase.lucene-misc}" {

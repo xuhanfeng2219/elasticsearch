@@ -113,7 +113,7 @@ class Elasticsearch extends EnvironmentAwareCommand {
             if (overrideValue != null) {
                 try {
                     // round-trip the property to an integer and back to a string to ensure that it parses properly
-                    Security.setProperty(property, Integer.toString(Integer.valueOf(overrideValue)));
+                    Security.setProperty(property, Integer.toString(Integer.parseInt(overrideValue)));
                 } catch (final NumberFormatException e) {
                     throw new IllegalArgumentException(
                             "failed to parse [" + overrideProperty + "] with value [" + overrideValue + "]", e);
@@ -128,7 +128,7 @@ class Elasticsearch extends EnvironmentAwareCommand {
 
     @Override
     protected void execute(Terminal terminal, OptionSet options, Environment env) throws UserException {
-        if (options.nonOptionArguments().isEmpty() == false) {
+        if (!options.nonOptionArguments().isEmpty()) {
             throw new UserException(ExitCodes.USAGE, "Positional arguments not allowed, found " + options.nonOptionArguments());
         }
         if (options.has(versionOption)) {

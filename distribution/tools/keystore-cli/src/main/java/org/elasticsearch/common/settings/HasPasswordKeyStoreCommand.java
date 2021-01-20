@@ -48,7 +48,7 @@ public class HasPasswordKeyStoreCommand extends KeyStoreAwareCommand {
             terminal.errorPrintln(Terminal.Verbosity.NORMAL, "ERROR: Elasticsearch keystore not found");
             throw new UserException(NO_PASSWORD_EXIT_CODE, null);
         }
-        if (keyStore.hasPassword() == false) {
+        if (!keyStore.hasPassword()) {
             terminal.errorPrintln(Terminal.Verbosity.NORMAL, "ERROR: Keystore is not password-protected");
             throw new UserException(NO_PASSWORD_EXIT_CODE, null);
         }

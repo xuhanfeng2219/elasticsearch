@@ -132,7 +132,7 @@ public class SetupPasswordTool extends LoggingAwareMultiCommand {
                 terminal.println("The passwords will be randomly generated and printed to the console.");
                 boolean shouldContinue = terminal.promptYesNo("Please confirm that you would like to continue", false);
                 terminal.println("\n");
-                if (shouldContinue == false) {
+                if (!shouldContinue) {
                     throw new UserException(ExitCodes.OK, "User cancelled operation");
                 }
             }

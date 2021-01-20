@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
  * the transport requests executed by the associated client. While the context is fully copied over, not all the headers
  * are copied, but a selected few. It is possible to control what headers are copied over by returning them in
  * {@link ActionPlugin#getRestHeaders()}.
+ * @author fenggege
  */
 public abstract class BaseRestHandler implements RestHandler {
 
@@ -92,7 +93,7 @@ public abstract class BaseRestHandler implements RestHandler {
             throw new IllegalArgumentException(unrecognized(request, unconsumedParams, candidateParams, "parameter"));
         }
 
-        if (request.hasContent() && request.isContentConsumed() == false) {
+        if (request.hasContent() && !request.isContentConsumed()) {
             throw new IllegalArgumentException("request [" + request.method() + " " + request.path() + "] does not support having a body");
         }
 
@@ -125,15 +126,18 @@ public abstract class BaseRestHandler implements RestHandler {
             CollectionUtil.timSort(scoredParams, (a, b) -> {
                 // sort by distance in reverse order, then parameter name for equal distances
                 int compare = a.v1().compareTo(b.v1());
-                if (compare != 0) return -compare;
-                else return a.v2().compareTo(b.v2());
+                if (compare != 0) {
+                    return -compare;
+                } else {
+                    return a.v2().compareTo(b.v2());
+                }
             });
-            if (first == false) {
+            if (!first) {
                 message.append(", ");
             }
             message.append("[").append(invalid).append("]");
             final List<String> keys = scoredParams.stream().map(Tuple::v2).collect(Collectors.toList());
-            if (keys.isEmpty() == false) {
+            if (!keys.isEmpty()) {
                 message.append(" -> did you mean ");
                 if (keys.size() == 1) {
                     message.append("[").append(keys.get(0)).append("]");

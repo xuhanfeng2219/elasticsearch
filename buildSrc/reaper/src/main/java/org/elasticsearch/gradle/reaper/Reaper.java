@@ -47,6 +47,7 @@ import java.util.stream.Stream;
  * and execute the given commands. If any commands fail, a failure message is
  * written to stderr. Otherwise, the input file will be deleted. If no inputs
  * produced errors, the entire input directory is deleted upon completion of reaping.
+ * @author fenggege
  */
 public class Reaper implements Closeable {
 

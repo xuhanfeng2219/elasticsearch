@@ -48,7 +48,7 @@ class CreateKeyStoreCommand extends KeyStoreAwareCommand {
         try (SecureString password = options.has(passwordOption) ? readPassword(terminal, true) : new SecureString(new char[0])) {
             Path keystoreFile = KeyStoreWrapper.keystorePath(env.configFile());
             if (Files.exists(keystoreFile)) {
-                if (terminal.promptYesNo("An elasticsearch keystore already exists. Overwrite?", false) == false) {
+                if (!terminal.promptYesNo("An elasticsearch keystore already exists. Overwrite?", false)) {
                     terminal.println("Exiting without creating keystore.");
                     return;
                 }

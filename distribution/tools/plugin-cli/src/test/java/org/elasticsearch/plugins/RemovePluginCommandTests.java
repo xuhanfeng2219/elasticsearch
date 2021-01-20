@@ -239,6 +239,7 @@ public class RemovePluginCommandTests extends ESTestCase {
         MockTerminal terminal = new MockTerminal();
 
         new MockRemovePluginCommand(env) {
+            @Override
             protected boolean addShutdownHook() {
                 return false;
             }

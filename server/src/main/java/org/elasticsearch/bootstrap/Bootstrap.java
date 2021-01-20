@@ -190,7 +190,7 @@ final class Bootstrap {
                         IOUtils.close(node, spawner);
                         LoggerContext context = (LoggerContext) LogManager.getContext(false);
                         Configurator.shutdown(context);
-                        if (node != null && node.awaitClose(10, TimeUnit.SECONDS) == false) {
+                        if (node != null && !node.awaitClose(10, TimeUnit.SECONDS)) {
                             throw new IllegalStateException("Node didn't stop within 10 seconds. " +
                                     "Any outstanding requests or tasks might get killed.");
                         }
@@ -317,7 +317,7 @@ final class Bootstrap {
     static void stop() throws IOException {
         try {
             IOUtils.close(INSTANCE.node, INSTANCE.spawner);
-            if (INSTANCE.node != null && INSTANCE.node.awaitClose(10, TimeUnit.SECONDS) == false) {
+            if (INSTANCE.node != null && !INSTANCE.node.awaitClose(10, TimeUnit.SECONDS)) {
                 throw new IllegalStateException("Node didn't stop within 10 seconds. Any outstanding requests or tasks might get killed.");
             }
         } catch (InterruptedException e) {
@@ -366,7 +366,7 @@ final class Bootstrap {
 
 
         try {
-            final boolean closeStandardStreams = (foreground == false) || quiet;
+            final boolean closeStandardStreams = (!foreground) || quiet;
             if (closeStandardStreams) {
                 final Logger rootLogger = LogManager.getRootLogger();
                 final Appender maybeConsoleAppender = Loggers.findAppender(rootLogger, ConsoleAppender.class);
@@ -400,7 +400,7 @@ final class Bootstrap {
             // running via systemd, the init script only specifies
             // `--quiet`, not `-d`, so we want users to be able to see
             // startup errors via journalctl.
-            if (foreground == false) {
+            if (!foreground) {
                 sysErrorCloser.run();
             }
 
@@ -417,20 +417,10 @@ final class Bootstrap {
                 // guice: log the shortened exc to the log file
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 PrintStream ps = null;
-                try {
-                    ps = new PrintStream(os, false, "UTF-8");
-                } catch (UnsupportedEncodingException uee) {
-                    assert false;
-                    e.addSuppressed(uee);
-                }
+                ps = new PrintStream(os, false, StandardCharsets.UTF_8);
                 new StartupException(e).printStackTrace(ps);
                 ps.flush();
-                try {
-                    logger.error("Guice Exception: {}", os.toString("UTF-8"));
-                } catch (UnsupportedEncodingException uee) {
-                    assert false;
-                    e.addSuppressed(uee);
-                }
+                logger.error("Guice Exception: {}", os.toString(StandardCharsets.UTF_8));
             } else if (e instanceof NodeValidationException) {
                 logger.error("node validation exception\n{}", e.getMessage());
             } else {
@@ -457,7 +447,7 @@ final class Bootstrap {
     }
 
     private static void checkLucene() {
-        if (Version.CURRENT.luceneVersion.equals(org.apache.lucene.util.Version.LATEST) == false) {
+        if (!Version.CURRENT.luceneVersion.equals(org.apache.lucene.util.Version.LATEST)) {
             throw new AssertionError("Lucene version mismatch this version of Elasticsearch requires lucene version ["
                 + Version.CURRENT.luceneVersion + "]  but the current lucene version is [" + org.apache.lucene.util.Version.LATEST + "]");
         }
